@@ -37,7 +37,7 @@ def main():
         chunks = text_splitter.split_text(text)
 
         # create embeddings
-        embeddings = OpenAIEmbeddings(openai_api_key="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")
+        embeddings = OpenAIEmbeddings()
         knowledge_base = FAISS.from_texts(chunks, embeddings)
 
         # show user input
@@ -45,7 +45,7 @@ def main():
         if user_question:
             docs = knowledge_base.similarity_search(user_question)
 
-            llm = OpenAI()
+            llm = OpenAI(openai_api_key="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")
             chain = load_qa_chain(llm, chain_type="stuff")
             with get_openai_callback() as cb:
                 response = chain.run(input_documents=docs, question=user_question)
