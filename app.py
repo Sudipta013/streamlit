@@ -13,6 +13,11 @@ headers = {
     "authorization": st.secrets["auth_token"],
    "content-type": "application/json"
 }
+st.write("Secret Key", st.secrets["auth_token"])
+st.write(
+    "Has environment variables been set:",
+    os.environ["openai_secret_key"] == st.secrets["auth_token"],
+)
 open_ai_key = st.secrets["auth_token"]
 #using 1 pdf 
 def main():
@@ -43,7 +48,7 @@ def main():
         chunks = text_splitter.split_text(text)
 
         # create embeddings
-        embeddings = OpenAIEmbeddings(openai_api_key=open_ai_key)
+        embeddings = OpenAIEmbeddings()
         knowledge_base = FAISS.from_texts(chunks, embeddings)
 
         # show user input
@@ -51,7 +56,7 @@ def main():
         if user_question:
             docs = knowledge_base.similarity_search(user_question)
 
-            llm = OpenAI(openai_api_key=open_ai_key)
+            llm = OpenAI()
             chain = load_qa_chain(llm, chain_type="stuff")
             with get_openai_callback() as cb:
                 response = chain.run(input_documents=docs, question=user_question)
