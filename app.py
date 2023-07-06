@@ -20,8 +20,8 @@ def main():
     st.header("Ask your PDF 💬")
 
     #take user openai key
-    st.subheader("Enter your open ai key")
-    api = st.text_input("API-Key", type= "password")
+    #st.subheader("Enter your open ai key")
+    #api = st.text_input("API-Key", type= "password")
 
     # upload file
     st.subheader("Upload a document")
@@ -46,7 +46,7 @@ def main():
         chunks = text_splitter.split_text(text)
 
         # create embeddings
-        embeddings = OpenAIEmbeddings(openai_api_key=api)
+        embeddings = OpenAIEmbeddings()
         knowledge_base = FAISS.from_texts(chunks, embeddings)
 
         # show user input
@@ -54,7 +54,7 @@ def main():
         if user_question:
             docs = knowledge_base.similarity_search(user_question)
 
-            llm = OpenAI(openai_api_key=api)
+            llm = OpenAI()
             chain = load_qa_chain(llm, chain_type="stuff")
             with get_openai_callback() as cb:
                 response = chain.run(input_documents=docs, question=user_question)
