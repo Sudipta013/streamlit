@@ -16,9 +16,9 @@ headers = {
 st.write("Secret Key", st.secrets["auth_token"])
 st.write(
     "Has environment variables been set:",
-    os.environ["openai_secret_key"] == st.secrets["auth_token"],
+    os.environ["auth_token"] == st.secrets["auth_token"],
 )
-open_ai_key = st.secrets["auth_token"]
+#open_ai_key = st.secrets["auth_token"]
 #using 1 pdf 
 def main():
     #load_dotenv()
