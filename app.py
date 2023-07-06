@@ -16,17 +16,20 @@ headers = {
 
 #using 1 pdf 
 def main():
+    #loading the api key from environment variable
     load_dotenv()
     st.set_page_config(page_title="chatPdf", page_icon="🧊")
     st.header("Ask your PDF 💬")
-    st.write("Secret Key", st.secrets["auth_token"])
-    st.write(
-        "Has environment variables been set:",
-        os.environ["auth_token"] == st.secrets["auth_token"],
-    )
-    key = st.secrets["auth_token"]
+    
+    #st.write("Secret Key", st.secrets["auth_token"]) -- to print the api key 
+    #st.write(
+    #   "Has environment variables been set:",
+    #    os.environ["auth_token"] == st.secrets["auth_token"],)
+    
+    #Two ways to retrieve your api key 
+    #key = st.secrets["auth_token"] -- this uses streamlit secrets 
     apikey = os.getenv("OPENAI_API_KEY")
-    st.write(apikey)
+
     # upload file
     st.subheader("Upload a document")
     pdf = st.file_uploader("")
