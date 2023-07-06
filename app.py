@@ -17,7 +17,7 @@ headers = {
 #using 1 pdf 
 def main():
     #loading the api key from environment variable
-    load_dotenv()
+    #load_dotenv()
     st.set_page_config(page_title="chatPdf", page_icon="🧊")
     st.header("Ask your PDF 💬")
     
@@ -27,8 +27,8 @@ def main():
     #    os.environ["auth_token"] == st.secrets["auth_token"],)
     
     #Two ways to retrieve your api key 
-    #key = st.secrets["auth_token"] -- this uses streamlit secrets 
-    apikey = os.getenv("OPENAI_API_KEY")
+    key = st.secrets["auth_token"] 
+    #apikey = os.getenv("OPENAI_API_KEY")
 
     # upload file
     st.subheader("Upload a document")
@@ -53,7 +53,7 @@ def main():
         chunks = text_splitter.split_text(text)
 
         # create embeddings
-        embeddings = OpenAIEmbeddings(openai_api_key=apikey)
+        embeddings = OpenAIEmbeddings(openai_api_key=key)
         knowledge_base = FAISS.from_texts(chunks, embeddings)
 
         # show user input
@@ -61,7 +61,7 @@ def main():
         if user_question:
             docs = knowledge_base.similarity_search(user_question)
 
-            llm = OpenAI(openai_api_key=apikey)
+            llm = OpenAI(openai_api_key=key)
             chain = load_qa_chain(llm, chain_type="stuff")
             with get_openai_callback() as cb:
                 response = chain.run(input_documents=docs, question=user_question)
