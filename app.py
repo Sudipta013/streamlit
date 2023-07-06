@@ -13,17 +13,18 @@ headers = {
     "authorization": st.secrets["auth_token"],
    "content-type": "application/json"
 }
-st.write("Secret Key", st.secrets["auth_token"])
-st.write(
-    "Has environment variables been set:",
-    os.environ["auth_token"] == st.secrets["auth_token"],
-)
+
 #open_ai_key = st.secrets["auth_token"]
 #using 1 pdf 
 def main():
     #load_dotenv()
     st.set_page_config(page_title="chatPdf", page_icon="🧊")
     st.header("Ask your PDF 💬")
+    st.write("Secret Key", st.secrets["auth_token"])
+    st.write(
+        "Has environment variables been set:",
+        os.environ["auth_token"] == st.secrets["auth_token"],
+    )
 
     # upload file
     st.subheader("Upload a document")
