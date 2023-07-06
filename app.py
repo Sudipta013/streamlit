@@ -16,7 +16,7 @@ headers = {
 
 #using 1 pdf 
 def main():
-    #load_dotenv()
+    load_dotenv()
     st.set_page_config(page_title="chatPdf", page_icon="🧊")
     st.header("Ask your PDF 💬")
     st.write("Secret Key", st.secrets["auth_token"])
@@ -25,6 +25,8 @@ def main():
         os.environ["auth_token"] == st.secrets["auth_token"],
     )
     key = st.secrets["auth_token"]
+    apikey = os.getenv("OPENAI_API_KEY")
+    st.write(apikey)
     # upload file
     st.subheader("Upload a document")
     pdf = st.file_uploader("")
