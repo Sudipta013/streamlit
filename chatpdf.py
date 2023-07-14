@@ -65,16 +65,16 @@ def main():
         )
         chunks = text_splitter.split_text(text)
 
-        st.subheader("Choose your embedding model"):
-            embedding_option  = st.radio(
+        st.subheader("Choose your embedding model")
+        embedding_option  = st.radio(
             "Choose Model", ["OpenAI", "HuggingFace"])
 
-            # create embeddings
-            if embedding_option == "OpenAI":
-                embeddings = OpenAIEmbeddings(openai_api_key=open_ai_key)
-            elif embedding_option == "HuggingFace":
-                embeddings = HuggingFaceEmbeddings()
-            knowledge_base = FAISS.from_texts(chunks, embeddings)
+        # create embeddings
+        if embedding_option == "OpenAI":
+            embeddings = OpenAIEmbeddings(openai_api_key=open_ai_key)
+        elif embedding_option == "HuggingFace":
+            embeddings = HuggingFaceEmbeddings()
+        knowledge_base = FAISS.from_texts(chunks, embeddings)
 
         # show user input
         st.subheader("Chat...")
