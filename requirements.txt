@@ -9,3 +9,4 @@ sentence-transformers==2.2.2
 huggingface==0.0.1
 huggingface-hub==0.15.1
 transformers==4.30.2
+InstructorEmbedding==1.0.1
