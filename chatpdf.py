@@ -7,7 +7,7 @@ from langchain.vectorstores import FAISS
 from langchain.chains.question_answering import load_qa_chain
 from langchain.llms import OpenAI
 from langchain.callbacks import get_openai_callback
-from langchain.embeddings import OpenAIEmbeddings, HuggingFaceInstructEmbeddings, HuggingFaceEmbeddings
+from langchain.embeddings import OpenAIEmbeddings, HuggingFaceEmbeddings
 from langchain.llms import HuggingFaceHub
 import os
 
@@ -21,7 +21,6 @@ huggingface_key = st.secrets["huggingface_key"]
 
 #using 1 pdf 
 def main():
-    load_dotenv()
     st.set_page_config(page_title="chatPdf", page_icon="🧊")
 
     #CSS
@@ -66,7 +65,7 @@ def main():
         )
         chunks = text_splitter.split_text(text)
 
-        with st.subheader("Choose your AI model"):
+        st.subheader("Choose your embedding model"):
             embedding_option  = st.radio(
             "Choose Model", ["OpenAI", "HuggingFace"])
 
@@ -74,7 +73,6 @@ def main():
             if embedding_option == "OpenAI":
                 embeddings = OpenAIEmbeddings(openai_api_key=open_ai_key)
             elif embedding_option == "HuggingFace":
-                #embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl")
                 embeddings = HuggingFaceEmbeddings()
             knowledge_base = FAISS.from_texts(chunks, embeddings)
 
