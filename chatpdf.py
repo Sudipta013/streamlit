@@ -86,7 +86,7 @@ def main():
             if embedding_option == "OpenAI":
                 llm = OpenAI(openai_api_key=open_ai_key)
             elif embedding_option == "HuggingFace":
-                llm = HuggingFaceHub(repo_id="google/flan-t5-xxl", model_kwargs={"temperature":0.5, "max_length":512})
+                llm = HuggingFaceHub(repo_id="google/flan-t5-xxl", model_kwargs={"temperature":0.5, "max_length":512},huggingfacehub_api_token=huggingface_key)
             chain = load_qa_chain(llm, chain_type="stuff")
             with get_openai_callback() as cb:
                 response = chain.run(input_documents=docs, question=user_question)
