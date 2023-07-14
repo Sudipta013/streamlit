@@ -74,7 +74,8 @@ def main():
             if embedding_option == "OpenAI":
                 embeddings = OpenAIEmbeddings(openai_api_key=open_ai_key)
             elif embedding_option == "HuggingFace":
-                embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl")
+                #embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl")
+                embeddings = HuggingFaceEmbeddings()
             knowledge_base = FAISS.from_texts(chunks, embeddings)
 
         # show user input
