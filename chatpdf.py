@@ -68,7 +68,6 @@ def main():
     st.markdown(bottom_bar_html, unsafe_allow_html=True)
 
     # upload file
-    #st.subheader("Welcome please upload a document 😊")
     pdf = st.file_uploader("")
         
     if pdf is not None:
