@@ -24,7 +24,12 @@ def main():
     st.set_page_config(page_title="chatPdf", page_icon="🧊")
 
     #CSS
-    st.header("AskPDF 💬")
+    st.markdown("<h1 style='text-align: center; font-family:Abril Fatface ; -webkit-text-stroke: 1px black ;font-size: 70px; padding-bottom: 15px; color: rgb(255, 255, 255) ;'>Ask Your PDF</h1>", unsafe_allow_html=True)
+    st.markdown("""<h5 style='text-align: center;font-family:Nunito ;font-size:18px;color: rgba(255,255,255,0.5); padding-top: 15px'>
+                Your PDF AI - like ChatGPT but for PDFs. Summarize and answer questions for free.
+                AskPDF can be really helpful in situations when you have to sift through a large amount of text. 
+                It can help you find a particular topic, summarize a PDF, or understand the topic in simpler terms and you can also ask follow-up questions about it.
+                </h5>""",unsafe_allow_html=True)
     hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
@@ -33,18 +38,34 @@ def main():
             </style>
             """
     st.markdown(hide_st_style, unsafe_allow_html=True)
-
     bg = """
-        <style> [data-testid="stAppViewContainer"]
-        {
-            background: rgb(113,25,192);
-            background: linear-gradient(90deg, rgba(113,25,192,0.9903420840992647) 5%, 
-            rgba(41,59,181,1) 50%, rgba(143,0,255,1) 95%);
+        <style> [data-testid="stAppViewContainer"]{
+        background: rgb(6,36,39);
         }
         </style>
         """
     st.markdown(bg, unsafe_allow_html=True)
-    
+
+    # Add the yellow bottom bar
+    bottom_bar_html = """
+    <style>
+    .bottom-bar {
+        background-color: #FFA500;
+        padding: 5px;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        font-family: 'Russo One';
+        font-size: 20px;
+    }
+    </style>
+    <div class="bottom-bar">
+        <span style="color: white; font-weight: bold;">The Techie Indians</span>
+    </div>
+    """
+    st.markdown(bottom_bar_html, unsafe_allow_html=True)
 
     # upload file
     st.subheader("Welcome please upload a document 😊")
