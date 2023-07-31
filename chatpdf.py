@@ -21,7 +21,7 @@ huggingface_key = st.secrets["huggingface_key"]
 
 #using 1 pdf 
 def main():
-    st.set_page_config(page_title="chatPdf", page_icon="🧊")
+    st.set_page_config(page_title="chatPdf", page_icon="pdf")
 
     #CSS
     st.markdown("<h1 style='text-align: center; font-family:Abril Fatface ; -webkit-text-stroke: 1px black ;font-size: 70px; padding-bottom: 15px; color: rgb(255, 255, 255) ;'>Ask Your PDF</h1>", unsafe_allow_html=True)
@@ -68,7 +68,7 @@ def main():
     st.markdown(bottom_bar_html, unsafe_allow_html=True)
 
     # upload file
-    st.subheader("Welcome please upload a document 😊")
+    #st.subheader("Welcome please upload a document 😊")
     pdf = st.file_uploader("")
         
     if pdf is not None:
