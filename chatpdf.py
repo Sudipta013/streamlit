@@ -11,108 +11,113 @@ from langchain.embeddings import OpenAIEmbeddings, HuggingFaceEmbeddings
 from langchain.llms import HuggingFaceHub
 import os
 
-headers = {
-    "authorization": st.secrets["auth_token"],
-   "content-type": "application/json"
-}
+# Load API keys from Streamlit secrets
 open_ai_key = st.secrets["auth_token"]
 huggingface_key = st.secrets["huggingface_key"]
 
-
-#using 1 pdf 
 def main():
-    st.set_page_config(page_title="chatPdf", page_icon="pdf")
+    st.set_page_config(page_title="Chat with Your PDF", page_icon="📄", layout="wide")
 
-    #CSS
-    st.markdown("<h1 style='text-align: center; font-family:Abril Fatface ; -webkit-text-stroke: 1px black ;font-size: 70px; padding-bottom: 15px; color: rgb(255, 255, 255) ;'>Ask Your PDF</h1>", unsafe_allow_html=True)
-    st.markdown("""<h5 style='text-align: center;font-family:Nunito ;font-size:18px;color: rgba(255,255,255,0.5); padding-top: 15px'>
-                Your PDF AI - like ChatGPT but for PDFs. Summarize and answer questions for free.
-                AskPDF can be really helpful in situations when you have to sift through a large amount of text. 
-                It can help you find a particular topic, summarize a PDF, or understand the topic in simpler terms and you can also ask follow-up questions about it.
-                </h5>""",unsafe_allow_html=True)
-    hide_st_style = """
-            <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            header {visibility: hidden;}
-            </style>
-            """
-    st.markdown(hide_st_style, unsafe_allow_html=True)
-    bg = """
-        <style> [data-testid="stAppViewContainer"]{
-        background: rgb(6,36,39);
-        }
-        </style>
+    # Custom CSS for improved UI
+    st.markdown(
         """
-    st.markdown(bg, unsafe_allow_html=True)
+        <style>
+            body {
+                font-family: 'Nunito', sans-serif;
+                background-color: #F8F9FA;
+            }
+            .main-title {
+                text-align: center;
+                font-size: 60px;
+                font-weight: bold;
+                color: #343A40;
+                margin-bottom: 10px;
+            }
+            .description {
+                text-align: center;
+                font-size: 18px;
+                color: #6C757D;
+                margin-bottom: 20px;
+            }
+            .sidebar .sidebar-content {
+                background-color: #212529;
+                color: white;
+            }
+            .footer {
+                background-color: #FFA500;
+                padding: 10px;
+                position: fixed;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                text-align: center;
+                font-weight: bold;
+                color: white;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
-    # Add the yellow bottom bar
-    bottom_bar_html = """
-    <style>
-    .bottom-bar {
-        background-color: #FFA500;
-        padding: 5px;
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        text-align: center;
-        font-family: 'Russo One';
-        font-size: 20px;
-    }
-    </style>
-    <div class="bottom-bar">
-        <span style="color: white; font-weight: bold;">The Techie Indians</span>
-    </div>
-    """
-    st.markdown(bottom_bar_html, unsafe_allow_html=True)
-
-    # upload file
-    pdf = st.file_uploader("")
-        
+    # Header and Description
+    st.markdown("<div class='main-title'>Chat with Your PDF</div>", unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div class='description'>
+        📄 Upload a PDF and ask questions about its content! Whether you need a summary, key insights, or specific details, our AI-powered assistant has you covered.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    
+    # File Upload
+    st.sidebar.header("Upload Your PDF")
+    pdf = st.sidebar.file_uploader("", type=["pdf"])
+    
     if pdf is not None:
         pdf_reader = PdfReader(pdf)
-        text = ""
-        for page in pdf_reader.pages:
-            text += page.extract_text()
+        text = "".join(page.extract_text() or "" for page in pdf_reader.pages)
 
-        # split into chunks
+        # Split text into manageable chunks
         text_splitter = CharacterTextSplitter(
             separator="\n",
-            chunk_size=1000,
-            chunk_overlap=200,
+            chunk_size=500,  # Reduced size for better retrieval
+            chunk_overlap=100,
             length_function=len
         )
         chunks = text_splitter.split_text(text)
 
-        st.subheader("Choose your embedding model")
-        embedding_option  = st.radio(
-            "Choose Model", ["OpenAI", "HuggingFace"])
-
-        # create embeddings
+        # Embedding Model Selection
+        st.sidebar.subheader("Choose Embedding Model")
+        embedding_option = st.sidebar.radio("Select Model:", ["OpenAI", "HuggingFace"])
+        
         if embedding_option == "OpenAI":
             embeddings = OpenAIEmbeddings(openai_api_key=open_ai_key)
-        elif embedding_option == "HuggingFace":
+        else:
             embeddings = HuggingFaceEmbeddings()
+        
         knowledge_base = FAISS.from_texts(chunks, embeddings)
 
-        # show user input
-        st.subheader("Chat...")
+        # Chat Interface
+        st.subheader("Chat with Your PDF 🗨️")
         user_question = st.text_input("Ask a question about your PDF:")
         if user_question:
-            docs = knowledge_base.similarity_search(user_question)
+            docs = knowledge_base.similarity_search(user_question, k=5)  # Fetching top 5 relevant chunks
 
             if embedding_option == "OpenAI":
                 llm = OpenAI(openai_api_key=open_ai_key)
-            elif embedding_option == "HuggingFace":
-                llm = HuggingFaceHub(repo_id="google/flan-t5-xxl", model_kwargs={"temperature":0.5, "max_length":512},huggingfacehub_api_token=huggingface_key)
-            chain = load_qa_chain(llm, chain_type="stuff")
+            else:
+                llm = HuggingFaceHub(repo_id="google/flan-t5-xxl", model_kwargs={"temperature": 0.5, "max_length": 512}, huggingfacehub_api_token=huggingface_key)
+            
+            chain = load_qa_chain(llm, chain_type="map_reduce")  # Using map_reduce for better handling
             with get_openai_callback() as cb:
                 response = chain.run(input_documents=docs, question=user_question)
                 print(cb)
-
+            
             st.write(response)
 
+    # Footer
+    st.markdown("<div class='footer'>Powered by The Techie Indians</div>", unsafe_allow_html=True)
 
 if __name__ == '__main__':
     main()
