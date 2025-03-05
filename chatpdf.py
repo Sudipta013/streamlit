@@ -72,7 +72,7 @@ def main():
     
     # File Upload
     st.sidebar.header("Upload Your PDF")
-    pdf = st.sidebar.file_uploader("", type=["pdf"])
+    pdf = st.sidebar.file_uploader("Upload a PDF", type=["pdf"], label_visibility="collapsed")
     
     if pdf is not None:
         pdf_reader = PdfReader(pdf)
