@@ -92,7 +92,7 @@ def main():
         embedding_option = st.sidebar.radio("Select Model:", ["OpenAI", "HuggingFace"])
         
         if embedding_option == "OpenAI":
-            embeddings = OpenAIEmbeddings(openai_api_key=open_ai_key)
+            embeddings = OpenAIEmbeddings(model_name="gpt-3.5-turbo",openai_api_key=open_ai_key)
         else:
             embeddings = HuggingFaceEmbeddings()
         
