@@ -107,7 +107,7 @@ def main():
             if embedding_option == "OpenAI":
                 llm = OpenAI(openai_api_key=open_ai_key)
             else:
-                llm = HuggingFaceHub(repo_id="google/flan-t5-xxl", model_kwargs={"temperature": 0.5, "max_length": 512}, huggingfacehub_api_token=huggingface_key)
+                llm = HuggingFaceHub(repo_id="google/flan-t5-xxl", model_kwargs={"temperature": 0.5, "max_length": 512}, huggingfacehub_api_token=huggingface_key,raw_response=True)
             
             chain = load_qa_chain(llm, chain_type="map_reduce")  # Using map_reduce for better handling
             with get_openai_callback() as cb:
